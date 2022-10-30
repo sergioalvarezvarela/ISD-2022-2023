@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<assembly>
+    <id>src</id>
+    <baseDirectory>${project.artifactId}</baseDirectory>
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+        <format>tar.bz2</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <useDefaultExcludes>false</useDefaultExcludes>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/.idea/**</exclude>
+				<exclude>**/*.iml</exclude>                  
+                <exclude>**/.project</exclude>
+                <exclude>**/.classpath</exclude>
+                <exclude>**/.settings/**</exclude>
+                <exclude>**/target/**</exclude>
+                <exclude>**/META-INF/**</exclude> <!-- Created by m2eclipse -->
+                <exclude>.git/**</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>

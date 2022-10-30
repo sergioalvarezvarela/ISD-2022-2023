@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>es.udc.ws.app</groupId>
+    <artifactId>ws-app</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+    <name>WS App Project</name>
+
+    <modules>
+        <module>ws-app-model</module>
+        <module>ws-app-thrift</module>
+        <module>ws-app-service</module>
+        <module>ws-app-client</module>
+    </modules>
+
+    <!-- =================================================================== -->
+    <!-- Default values for properties. These default values are expected 
+        to be valid for most profiles. Specific profiles can overwrite values when 
+        necessary. -->
+    <properties>
+        <!-- Data source properties -->
+        <dataSource.user>ws</dataSource.user>
+        <dataSource.password>ws</dataSource.password>
+        <dataSource.jndiName>jdbc/ws-javaexamples-ds</dataSource.jndiName>
+        <testDataSource.user>${dataSource.user}</testDataSource.user>
+        <testDataSource.password>${dataSource.password}</testDataSource.password>
+
+        <!-- Encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Package versions (except those defined in "profiles" section) -->
+        <commonsDbcp.version>2.9.0</commonsDbcp.version>
+        <junit.version>5.8.2</junit.version>
+        <servletApi.version>5.0.0</servletApi.version>
+		<httpclient.version>4.5.13</httpclient.version>
+        <jackson.version>2.13.3</jackson.version>
+        <ws-util.version>3.6.0</ws-util.version>
+
+		<!-- JDBC driver properties -->
+		<jdbcDriver.groupId>mysql</jdbcDriver.groupId>
+		<jdbcDriver.artifactId>mysql-connector-java</jdbcDriver.artifactId>
+        <jdbcDriver.version>8.0.29</jdbcDriver.version>
+		<jdbcDriver.className>com.mysql.cj.jdbc.Driver</jdbcDriver.className>
+
+		<!-- Data source properties -->
+		<dataSource.baseUrl>jdbc:mysql://localhost/ws</dataSource.baseUrl>
+        <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;serverTimezone=Europe/Madrid&amp;allowPublicKeyRetrieval=true</dataSource.url>
+        <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;serverTimezone=Europe/Madrid&amp;allowPublicKeyRetrieval=true</testDataSource.url>
+		<dataSource.createTablesScript>MySQLCreateTables.sql</dataSource.createTablesScript>		
+
+	    <!-- Plugin versions -->
+        <compilerMavenPlugin.version>3.10.1</compilerMavenPlugin.version>
+		<resourcesMavenPlugin.version>3.2.0</resourcesMavenPlugin.version>
+		<execMavenPlugin.version>3.0.0</execMavenPlugin.version>
+        <warMavenPlugin.version>3.3.2</warMavenPlugin.version>
+		<sqlMavenPlugin.version>1.5</sqlMavenPlugin.version>
+        <jettyMavenPlugin.version>11.0.9</jettyMavenPlugin.version>
+		<surefireMavenPlugin.version>2.22.2</surefireMavenPlugin.version>
+		<assemblyMavenPlugin.version>3.3.0</assemblyMavenPlugin.version>
+        <enforcerMavenPlugin.version>3.0.0</enforcerMavenPlugin.version>
+		<thriftMavenPlugin.version>0.10.0</thriftMavenPlugin.version>
+		
+    </properties>
+
+    <!-- ========================================================== -->
+    <!-- Profiles -->
+    <profiles>
+        <profile>
+            <id>thrift-0.16.0</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <thrift.version>0.16.0</thrift.version>
+                <slf4j.version>1.7.35</slf4j.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.9.1</id>
+            <properties>
+                <thrift.version>0.9.1</thrift.version>
+                <slf4j.version>1.5.8</slf4j.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.9.2</id>
+            <properties>
+                <thrift.version>0.9.2</thrift.version>
+                <slf4j.version>1.5.8</slf4j.version>
+                <annotationApi.version>1.3.2</annotationApi.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.9.3</id>
+            <properties>
+                <thrift.version>0.9.3</thrift.version>
+                <slf4j.version>1.7.12</slf4j.version>
+                <annotationApi.version>1.3.2</annotationApi.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.10.0</id>
+            <properties>
+                <thrift.version>0.10.0</thrift.version>
+                <slf4j.version>1.7.12</slf4j.version>
+                <annotationApi.version>1.3.2</annotationApi.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.11.0</id>
+            <properties>
+                <thrift.version>0.11.0</thrift.version>
+                <slf4j.version>1.7.12</slf4j.version>
+                <annotationApi.version>1.3.2</annotationApi.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.12.0</id>
+            <properties>
+                <thrift.version>0.12.0</thrift.version>
+                <slf4j.version>1.7.25</slf4j.version>
+                <annotationApi.version>1.3.2</annotationApi.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.13.0</id>
+            <properties>
+                <thrift.version>0.13.0</thrift.version>
+                <slf4j.version>1.7.25</slf4j.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.14.0</id>
+            <properties>
+                <thrift.version>0.14.0</thrift.version>
+                <slf4j.version>1.7.28</slf4j.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.14.1</id>
+            <properties>
+                <thrift.version>0.14.1</thrift.version>
+                <slf4j.version>1.7.28</slf4j.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.14.2</id>
+            <properties>
+                <thrift.version>0.14.2</thrift.version>
+                <slf4j.version>1.7.28</slf4j.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>thrift-0.15.0</id>
+            <properties>
+                <thrift.version>0.15.0</thrift.version>
+                <slf4j.version>1.7.28</slf4j.version>
+            </properties>
+        </profile>
+    </profiles>
+
+    <!-- ========================================================== -->
+    <!-- Additional repositories -->
+    <repositories>
+    </repositories>
+
+    <!-- ========================================================== -->
+    <!-- Dependency management -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- JDBC driver -->
+			<dependency>
+				<groupId>${jdbcDriver.groupId}</groupId>
+				<artifactId>${jdbcDriver.artifactId}</artifactId>
+				<version>${jdbcDriver.version}</version>
+				<scope>test</scope>
+			</dependency>
+            <!-- Commons DBCP - JDBC Connection Pool -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-dbcp2</artifactId>
+				<version>${commonsDbcp.version}</version>
+				<scope>test</scope>
+			</dependency>
+            <!-- JUnit -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Servlet API -->
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${servletApi.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- WS-JavaExamples Util -->
+            <dependency>
+                <groupId>es.udc.ws</groupId>
+                <artifactId>ws-util</artifactId>
+                <version>${ws-util.version}</version>
+            </dependency>
+			<!-- Commons HttpClient -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>fluent-hc</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+			<!-- Jackson -->
+			<dependency>
+    			<groupId>com.fasterxml.jackson.core</groupId>
+			    <artifactId>jackson-databind</artifactId>
+    			<version>${jackson.version}</version>
+			</dependency>
+			<!-- Thrift -->
+            <dependency>
+                <groupId>org.apache.thrift</groupId>
+                <artifactId>libthrift</artifactId>
+                <version>${thrift.version}</version>
+                <exclusions>
+                    <!--  To avoid scanning the classes of the package javax.servlet
+                          from multiple locations -->
+                    <exclusion>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- SLF4j (required by Thrift) -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <!-- Project Model -->
+            <dependency>
+                <groupId>es.udc.ws.app</groupId>
+                <artifactId>ws-app-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Project Thrift -->
+            <dependency>
+                <groupId>es.udc.ws.app</groupId>
+                <artifactId>ws-app-thrift</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+
+        <!-- =============================================================== -->
+        <!-- Filtering -->
+        <resources>
+
+            <!-- Continue considering resources the files in src/main/resources, 
+                but without applying filtering. -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+
+            <!-- Filter Jetty configuration -->
+            <resource>
+                <directory>../src/main/jetty</directory>
+                <includes>
+                    <include>jetty-env.xml</include>
+                </includes>
+                <targetPath>../jetty</targetPath>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <testResources>
+
+            <!-- Continue considering resources the files in src/test/resources, 
+                but without applying filtering. -->
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+
+        </testResources>
+
+
+        <plugins>
+
+ 			<!-- ========================================================== -->
+			<!-- Compiler configuration -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compilerMavenPlugin.version}</version>
+				<configuration>
+					<verbose>true</verbose>
+                    <!-- Source & target are not necessary, but intelliJ depends on it to set the Java compiler settings  -->
+                    <source>17</source>
+                    <target>17</target>					
+					<release>17</release>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+
+			<!-- ========================================================== -->
+			<!-- Resources plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${resourcesMavenPlugin.version}</version>
+			</plugin>
+
+			<!-- ========================================================== -->
+			<!-- Surefire plugin -->
+			<!-- Default version does not support JUnit 5. -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefireMavenPlugin.version}</version>
+                <configuration>
+                    <forkCount>0</forkCount>
+                </configuration>
+			</plugin>
+
+  			<!-- ========================================================== -->
+			<!-- Exec plugin -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${execMavenPlugin.version}</version>
+			</plugin>
+
+            <!-- ========================================================== -->
+			<!-- WAR plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${warMavenPlugin.version}</version>
+			</plugin>
+            
+            <!-- ========================================================== -->
+            <!-- Setting SQL Plugin -->
+            <!-- - Configuration specifies onError="continue" since SQL scripts 
+                try to drop tables before creating them (which causes errors if such tables 
+                do not exist yet). - Configuartion specifies autocommit="true" since some 
+                drivers (e.g the PostgreSQL JDBC 2 driver) do not commit changes if some 
+                error ocurrs. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>${sqlMavenPlugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>${jdbcDriver.groupId}</groupId>
+                        <artifactId>${jdbcDriver.artifactId}</artifactId>
+                        <version>${jdbcDriver.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>${jdbcDriver.className}</driver>
+                    <url>${dataSource.url}</url>
+                    <username>${dataSource.user}</username>
+                    <password>${dataSource.password}</password>
+                    <autocommit>true</autocommit>
+                    <onError>continue</onError>
+                    <fileset>
+                        <basedir>${basedir}</basedir>
+                        <includes>
+                            <include>
+                                src/sql/${dataSource.createTablesScript}
+                            </include>
+                        </includes>
+                    </fileset>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-tables-for-testing</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>${jdbcDriver.className}</driver>
+                            <url>${testDataSource.url}</url>
+                            <username>${testDataSource.user}</username>
+                            <password>${testDataSource.password}</password>
+                            <autocommit>true</autocommit>
+                            <onError>continue</onError>
+                            <fileset>
+                                <basedir>${basedir}</basedir>
+                                <includes>
+                                    <include>
+                                        src/sql/${dataSource.createTablesScript}
+                                    </include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+			<!-- ========================================================== -->
+			<!-- Assembly configuration -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${assemblyMavenPlugin.version}</version>
+				<configuration>
+                    <finalName>${project.artifactId}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>src/main/assembly/src.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+
+			<!-- ========================================================== -->
+			<!-- Enforcer configuration -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${enforcerMavenPlugin.version}</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+								<version>3.5.0</version>
+								</requireMavenVersion>
+							</rules>    
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>		            
+
+        </plugins>
+
+    </build>
+
+</project>

@@ -1,0 +1,14 @@
+# Target directories.
+target/
+
+# Eclipse configuration.
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA configuration.
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/

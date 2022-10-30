@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>es.udc.ws.app</groupId>
+        <artifactId>ws-app</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>ws-app-client</artifactId>
+    <packaging>jar</packaging>
+    <name>WS App Client Subsystem</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>es.udc.ws</groupId>
+            <artifactId>ws-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>es.udc.ws.app</groupId>
+            <artifactId>ws-app-thrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

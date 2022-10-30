@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>es.udc.ws.app</groupId>
+        <artifactId>ws-app</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>ws-app-service</artifactId>
+    <packaging>war</packaging>
+    <name>WS App Service Subsystem</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>es.udc.ws.app</groupId>
+            <artifactId>ws-app-model</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>es.udc.ws.app</groupId>
+			<artifactId>ws-app-thrift</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>ws-app-service</finalName>
+        <plugins>
+
+            <!-- ========================================================== -->
+            <!-- Jetty configuration -->
+            <plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jettyMavenPlugin.version}</version>
+
+				<configuration>
+                    <httpConnector>
+                        <port>9090</port>
+                    </httpConnector>
+                    <webApp>
+                        <contextPath>/${project.artifactId}</contextPath>
+                        <jettyEnvXml>target/jetty/jetty-env.xml</jettyEnvXml>
+                    </webApp>
+                    <!--
+                    https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#container-classpath
+                    The pause in seconds between sweeps of the webapp to check for changes and automatically
+                    hot redeploy if any are detected. By default this is -1, which disables hot redeployment
+                    scanning. A value of 0 means no hot redeployment is done, and that you must use the Enter
+                    key to manually force a redeploy. Any positive integer will enable hot redeployment, using
+                    the number as the sweep interval in seconds.
+                    -->
+                    <scan>0</scan>
+				</configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>${jdbcDriver.groupId}</groupId>
+                        <artifactId>${jdbcDriver.artifactId}</artifactId>
+                        <version>${jdbcDriver.version}</version>
+                    </dependency>
+                    <dependency>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-dbcp2</artifactId>
+						<version>${commonsDbcp.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

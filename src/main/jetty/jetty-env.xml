@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "https://www.eclipse.org/jetty/configure_10_0.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+    <New id="WS-JavaExamplesDS" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>${dataSource.jndiName}</Arg>
+        <Arg>
+            <New class="org.apache.commons.dbcp2.BasicDataSource">
+                <Set name="url"><![CDATA[${dataSource.url}]]></Set>
+                <Set name="username">${dataSource.user}</Set>
+                <Set name="password">${dataSource.password}</Set>
+            </New>
+        </Arg>
+        <Call name="bindToENC">
+            <Arg>${dataSource.jndiName}</Arg>
+        </Call>
+   </New>
+
+</Configure>
