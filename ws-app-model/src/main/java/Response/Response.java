@@ -19,14 +19,14 @@ public class Response {
         this.asistencia = asistencia;
     }
 
-    public Response(Long eventId,Long responseId, String email, boolean asistencia, LocalDateTime responseDate) {
+    public Response(Long responseId,Long eventId, String email,LocalDateTime responseDate, boolean asistencia) {
         this(eventId,email,asistencia);
         this.responseId = responseId;
         this.responseDate = (responseDate!= null) ? responseDate.withNano(0):null;
     }
 
     public Response(Response response) {
-        this(response.getEventId(),response.getResponseId(), response.getEmail(), response.getAsistencia(),response.getResponseDate());
+        this(response.getResponseId(),response.getEventId(), response.getEmail(),response.getResponseDate(), response.getAsistencia());
     }
 
 

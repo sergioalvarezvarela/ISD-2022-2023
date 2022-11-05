@@ -12,10 +12,11 @@ import java.util.List;
 public interface SqlResponseDao {
     public Response create(Connection connection, Response Response) throws InputValidationException;
 
-    public List<Response> findByEmployee(Connection connection, String email, boolean asistencia) throws InputValidationException;
+    public List<Response> findByEmployee(Connection connection, String email, Boolean asistencia);
 
-    public boolean ifExistsResponse(Connection connection, String email, Long idEvento) throws InstanceNotFoundException;
-
+    public Boolean existsResponse(Connection connection,Long responseId, String email);
     public void remove(Connection connection, Long ResponseId) throws InstanceNotFoundException;
 
+    public Response findResponseById(Connection connection, Long responseId)
+            throws InstanceNotFoundException;
 }

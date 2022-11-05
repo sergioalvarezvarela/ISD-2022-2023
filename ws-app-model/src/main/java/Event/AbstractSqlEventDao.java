@@ -19,7 +19,7 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
     protected AbstractSqlEventDao() {
     }
 
-
+    @Override
     public Event findEventById(Connection connection, Long eventId)
             throws InstanceNotFoundException {
 
@@ -31,7 +31,7 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
 
             /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setLong(i++, eventId.longValue());
+            preparedStatement.setLong(i++, eventId);
 
             /* Execute query. */
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -54,7 +54,7 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
             LocalDateTime creationDate = creationDateAsTimestamp.toLocalDateTime();
             LocalDateTime celebrationDate = celebrationDateAsTimestamp.toLocalDateTime();
 
-            /* Return movie. */
+            /* Return event. */
             return new Event(eventId, event_name, description, celebrationDate,
                     creationDate, runtime, event_state, attendance, not_attendance);
 
@@ -63,29 +63,111 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
         }
     }
 
-    public List<Event> findEventByDateOrAndKeyWord(Connection connection, LocalDate start, LocalDate finish, String keywords) throws InputValidationException {
-        return null;
+    @Override
+    public List<Event> findEventByDateOrAndKeyWord(Connection connection, LocalDate start, LocalDate finish, String keywords) {
+
+
+        String queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
+                + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate >= ? AND celebrationDate <= ?  ";
+
+
+        if (keywords != null) {
+            queryString += " AND ";
+            queryString += " LOWER(description) LIKE LOWER(?)";
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
+
+
+            int i = 1;
+
+            /* Fill "preparedStatement". */
+            preparedStatement.setDate(i++, java.sql.Date.valueOf(start));
+            preparedStatement.setDate(i++, java.sql.Date.valueOf(finish));
+            preparedStatement.setString(i++, "%" + keywords + "%");
+
+
+
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Event> eventsBetweenDates = new ArrayList<Event>();
+
+            while (resultSet.next()) {
+                i = 1;
+                Long eventId = resultSet.getLong(i++);
+                String event_name = resultSet.getString(i++);
+                String description = resultSet.getString(i++);
+                Timestamp celebrationDateAsTimestamp = resultSet.getTimestamp(i++);
+                Timestamp creationDateAsTimestamp = resultSet.getTimestamp(i++);
+                int runtime = resultSet.getInt(i++);
+                boolean event_state = resultSet.getBoolean(i++);
+                int attendance = resultSet.getInt(i++);
+                int not_attendance = resultSet.getInt(i++);
+                LocalDateTime creationDate = creationDateAsTimestamp.toLocalDateTime();
+                LocalDateTime celebrationDate = celebrationDateAsTimestamp.toLocalDateTime();
+
+
+                Event event = new Event(eventId, event_name, description, celebrationDate,
+                        creationDate, runtime, event_state, attendance, not_attendance);
+                eventsBetweenDates.add(event);
+
+            }
+            return eventsBetweenDates;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void cancel(Connection connection, Long eventid, Boolean status)
+    @Override
+    public void CancelEvent(Connection connection, Long eventId, Boolean status)
             throws InstanceNotFoundException {
 
-        /* Create "queryString". */
-        String queryString = "UPDATE Events"
-                + " SET event_state = ? WHERE EventId = ?";
+
+        String queryString = "UPDATE Events SET event_state = ?"
+                + " WHERE eventId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
+            /* Fill "preparedStatement". */
+            int i = 1;
+            preparedStatement.setBoolean(i++, status);
+            preparedStatement.setLong(i++, eventId);
+
+            /* Execute query. */
+            int canceledRows = preparedStatement.executeUpdate();
+            if (canceledRows == 0) {
+                throw new InstanceNotFoundException(eventId, Event.class.getName());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void updateAttendance(Connection connection, Long eventId, Boolean asistencia, int cant)
+            throws InstanceNotFoundException {
+
+        String queryString = " ";
+        if (asistencia) {
+            queryString = "UPDATE Events"
+                    + " SET attendance = ? WHERE EventId = ?";
+        } else {
+            queryString = "UPDATE Events"
+                    + " SET not_attendance = ? WHERE EventId = ?";
+        }
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
 
             /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setBoolean(i++, status);
-            preparedStatement.setLong(i++, eventid);
+            preparedStatement.setInt(i++, cant);
+            preparedStatement.setLong(i++, eventId);
 
             /* Execute query. */
             int updatedRows = preparedStatement.executeUpdate();
 
             if (updatedRows == 0) {
-                throw new InstanceNotFoundException(eventid, Event.class.getName());
+                throw new InstanceNotFoundException(eventId, Event.class.getName());
             }
 
         } catch (SQLException e) {
@@ -94,6 +176,7 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
 
     }
 
+    @Override
     public Boolean isAlreadyCancelled(Connection connection, Long eventId, Boolean status) {
 
         /* Create "queryString". */
@@ -104,14 +187,14 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
             /* Fill "preparedStatement". */
             int i = 1;
             preparedStatement.setLong(i++, eventId);
-            preparedStatement.setBoolean(i++,status);
+            preparedStatement.setBoolean(i++, status);
 
             /* Execute query. */
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next()) {
                 return false;
-            } else{
+            } else {
                 return true;
             }
             /* Return movie. */
@@ -121,6 +204,8 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
         }
     }
 
+
+    @Override
 
     public void remove(Connection connection, Long eventId) throws InstanceNotFoundException {
         String queryString = "DELETE FROM Events WHERE" + " eventId = ?";
@@ -138,47 +223,46 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
         }
 
 
-    }}
+    }
 
+    @Override
+    public void update(Connection connection, Event event)
+            throws InstanceNotFoundException {
 
+        /* Create "queryString". */
+        String queryString = "UPDATE Events"
+                + " SET event_name = ?, description = ?, celebrationDate = ?, "
+                + "creationDate = ?, runtime = ?, event_state = ?, attendance = ?, not_attendance = ? WHERE eventId = ?";
 
-
-
-/*  @Override
-    public Event find(Connection connection, Long eventId)
-            throws InstanceNotFoundException, SQLException {
-        String queryString = "SELECT title, celebracionDate, creationDate"
-                + "eventDescription, runtime, eventState, attendance, not_attendance"
-                + "FROM Event WHERE evenId = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
+
+            /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setLong(i++, eventId.longValue());
+            preparedStatement.setString(i++, event.getName());
+            preparedStatement.setString(i++, event.getDescription());
+            preparedStatement.setTimestamp(i++, Timestamp.valueOf(event.getCelebrationDate()));
+            preparedStatement.setTimestamp(i++, Timestamp.valueOf(event.getCreationDate()));
+            preparedStatement.setInt(i++, event.getRuntime());
+            preparedStatement.setBoolean(i++, event.getEventState());
+            preparedStatement.setInt(i++, event.getAttendance());
+            preparedStatement.setInt(i++, event.getNot_Attendance());
+            preparedStatement.setLong(i++, event.getEventId());
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (!resultSet.next()) {
-                throw new InstanceNotFoundException(eventId,
+            /* Execute query. */
+            int updatedRows = preparedStatement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new InstanceNotFoundException(event.getEventId(),
                         Event.class.getName());
             }
-            i = 1;
-            String title = resultSet.getString(i++);
-            int runtime = resultSet.getShort(i++);
-            String eventDescription = resultSet.getString(i++);
-            boolean eventState = resultSet.getBoolean(i++);
-            int attendance = resultSet.getInt(i++);
-            int not_attendance = resultSet.getInt(i++);
-            Timestamp celebrationDateT = resultSet.getTimestamp(i++);
-            LocalDateTime celebrationDate = celebrationDateT.toLocalDateTime();
-            Timestamp creationDateT = resultSet.getTimestamp(i++);
-            LocalDateTime creationDate = creationDateT.toLocalDateTime();
 
-            return new Event(eventId, title, eventDescription, runtime, celebrationDate,
-                    creationDate, eventState, attendance, not_attendance);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
+}
 
 
 
-}*/
+
+
