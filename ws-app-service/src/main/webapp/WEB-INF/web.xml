@@ -8,23 +8,18 @@
     <distributable/>
 
     <display-name>WS App Service</display-name>
-
-    <!-- REST service -->
-    <!-- Fill XXX and uncomment the following lines --> 
-    <!--
     <servlet>
-        <display-name>XXXServlet</display-name>
-        <servlet-name>XXXServlet</servlet-name>
+        <display-name>EventServlet</display-name>
+        <servlet-name>EventServlet</servlet-name>
         <servlet-class>
-            es.udc.ws.app.restservice.servlets.XXXServlet
+            es.udc.ws.app.restservice.servlets.EventServlet
         </servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>XXXServlet</servlet-name>
-        <url-pattern>/xxx/*</url-pattern>
+        <servlet-name>EventServlet</servlet-name>
+        <url-pattern>/event/*</url-pattern>
     </servlet-mapping>
-    -->
 
    <!-- Thrift service -->
    <!-- Fill XXX and uncomment the following lines --> 

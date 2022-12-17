@@ -31,9 +31,6 @@ public class EventServiceImpl implements EventService {
     private SqlEventDao eventDao = null;
     private SqlResponseDao responseDao = null;
 
-    //Validaciones InputValidationException
-    //  -Same addResponse
-    //  -dia actual - response.responseDate < 24 h
     public EventServiceImpl() {
         dataSource = DataSourceLocator.getDataSource(APP_DATA_SOURCE);
         eventDao = SqlEventDaoFactory.getDao();
@@ -95,11 +92,8 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public void CancelEvent(Long eventId, Boolean status) throws
-            InputValidationException, InstanceNotFoundException, AlreadyCanceledException, OutOfTimeException {
-        if (status) {
-            throw new InputValidationException("El valor de status no es correcto para ser cancelado");
-        }
+    public void CancelEvent(Long eventId) throws
+            InstanceNotFoundException, AlreadyCanceledException, OutOfTimeException {
         try (Connection connection = dataSource.getConnection()) {
 
             try {
@@ -110,15 +104,15 @@ public class EventServiceImpl implements EventService {
                 Event evento1 = eventDao.findEventById(connection, eventId);
                 if (LocalDateTime.now().isAfter(evento1.getCelebrationDate())) {
                     connection.rollback();
-                    throw new OutOfTimeException("El tiempo de cancelación ha expirado para el evento: ", eventId);
+                    throw new OutOfTimeException(eventId);
                 }
-                Boolean iscancelled = eventDao.isAlreadyCancelled(connection, eventId, status);
-                if (iscancelled) {
+                Boolean isnotcanceled = eventDao.findEventById(connection, eventId).getEventState();
+                if (!isnotcanceled) {
                     connection.rollback();
-                    throw new AlreadyCanceledException("El evento ya ha sido cancelado", eventId);
+                    throw new AlreadyCanceledException(eventId);
                 }
                 /* Do work. */
-                eventDao.CancelEvent(connection, eventId, status);
+                eventDao.CancelEvent(connection, eventId);
 
                 /* Commit. */
                 connection.commit();
@@ -155,20 +149,22 @@ public class EventServiceImpl implements EventService {
                 Event event1 = eventDao.findEventById(connection, response.getEventId());
                 if (LocalDateTime.now().isAfter(event1.getCelebrationDate().minusDays(1))) {
                     connection.rollback();
-                    throw new OutOfTimeException("Imposible responder a este evento fuera de tiempo: ", event1.getEventId());
+                    throw new OutOfTimeException(event1.getEventId());
                 }
                 if (!event1.getEventState()) {
                     connection.rollback();
-                    throw new AlreadyCanceledException("No se puede responder a un evento ya cancelado: ", event1.getEventId());
-                }
-                if (response.getAsistencia()) {
-                    eventDao.updateAttendance(connection, event1.getEventId(), response.getAsistencia(), event1.getAttendance() + 1);
-                } else {
-                    eventDao.updateAttendance(connection, event1.getEventId(), response.getAsistencia(), event1.getNot_Attendance() + 1);
+                    throw new AlreadyCanceledException(event1.getEventId());
                 }
                 if (responseDao.existsResponse(connection, response.getEventId(), response.getEmail())) {
                     connection.rollback();
-                    throw new AlreadyResponseException("No puedes responder a un evento al que ya has respondido: ", event1.getEventId());
+                    throw new AlreadyResponseException(event1.getEventId());
+                }
+                if (response.getAsistencia()) {
+                    event1.setAttendance(event1.getAttendance()+1);
+                    eventDao.update(connection, event1);
+                } else {
+                    event1.setNot_Attendance(event1.getNot_Attendance() + 1);
+                    eventDao.update(connection,event1);
                 }
 
                 /* Do work. */
@@ -203,7 +199,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findEventsbyDate(LocalDate dateIn, LocalDate dateEnd, String keywords) throws InputValidationException {
-        if ((dateIn == null) || (dateEnd == null)){
+        if  (dateEnd == null){
             throw new InputValidationException("Las datas no pueden ser nulas");
         }
         if(keywords==null){
@@ -219,13 +215,15 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Response> findResponsebyEmail(String email, Boolean Asist) throws InputValidationException {
         validateEmail(email);
-        if (Asist==null) {
-            throw new InputValidationException("El valor no puede ser nulo");
+        if (Asist==null){
+            throw new InputValidationException("El valor introducido no es válido");
         }
-        try (Connection connection = dataSource.getConnection()) {
-            return responseDao.findByEmployee(connection, email, Asist);
-        } catch (SQLException e) {
+        try(Connection connection = dataSource.getConnection()){
+            return responseDao.findByEmployee(connection,email, Asist);
+        } catch (SQLException e){
             throw new RuntimeException(e);
         }
     }
+
+
 }

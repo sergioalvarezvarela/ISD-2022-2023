@@ -1,42 +1,34 @@
 package es.udc.ws.app.test.model.appservice;
 
 import Event.Event;
+import Event.SqlEventDao;
+import Event.SqlEventDaoFactory;
+import EventService.EventService;
+import EventService.EventServiceFactory;
 import EventService.Exception.AlreadyCanceledException;
 import EventService.Exception.AlreadyResponseException;
 import EventService.Exception.OutOfTimeException;
+import Response.Response;
 import Response.SqlResponseDao;
 import Response.SqlResponseDaoFactory;
-import Response.Response;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 import es.udc.ws.util.sql.DataSourceLocator;
 import es.udc.ws.util.sql.SimpleDataSource;
-import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import EventService.EventServiceFactory;
-import EventService.EventService;
-import Event.SqlEventDaoFactory;
-import Event.SqlEventDao;
-
 import javax.sql.DataSource;
-
-import static es.udc.ws.app.model.util.ModelConstants.APP_DATA_SOURCE;
-
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
+
+import static es.udc.ws.app.model.util.ModelConstants.APP_DATA_SOURCE;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppServiceTest {
 
@@ -254,7 +246,6 @@ public class AppServiceTest {
             event.setCelebrationDate(null);
             Event event1 = eventService.addEvent(event);
         });
-
     }
 
     @Test
@@ -361,7 +352,6 @@ public class AppServiceTest {
 
     @Test
     public void testFindByDateorKeywordException() {
-        assertThrows(InputValidationException.class, () -> eventService.findEventsbyDate(null, formatearfechaAMD("20/12/2022"),null));
         assertThrows(InputValidationException.class, () -> eventService.findEventsbyDate(formatearfechaAMD("20/12/2022"),null,null));
     }
 
@@ -370,7 +360,7 @@ public class AppServiceTest {
         Event event = getValidEvent();
         try {
             event = createEvent(event);
-            eventService.CancelEvent(event.getEventId(), false);
+            eventService.CancelEvent(event.getEventId());
             Event event2 = eventService.findEvent(event.getEventId());
             event.setEventState(false);
             assertEquals(event2, event);
@@ -388,24 +378,19 @@ public class AppServiceTest {
         event = createEvent(event);
         Event finalEvent = event;
         assertThrows(AlreadyCanceledException.class, () -> {
-            eventService.CancelEvent(finalEvent.getEventId(), false);
-            eventService.CancelEvent(finalEvent.getEventId(), false);
+            eventService.CancelEvent(finalEvent.getEventId());
+            eventService.CancelEvent(finalEvent.getEventId());
         });
         Event finalEvent1 = event;
         assertThrows(InstanceNotFoundException.class, () -> {
-            eventService.CancelEvent(finalEvent1.getEventId() + 100, false);
+            eventService.CancelEvent(finalEvent1.getEventId() + 100);
             removeEvent(finalEvent1.getEventId());
-        });
-        Event finalEvent2 = event;
-        assertThrows(InputValidationException.class, () -> {
-            eventService.CancelEvent(finalEvent2.getEventId(), true);
-            removeEvent(finalEvent2.getEventId());
         });
         Event finalEvent3 = event;
         assertThrows(OutOfTimeException.class, () -> {
             finalEvent3.setCelebrationDate(formatearfecha("02/11/2022 11:22:22"));
             updateEvent(finalEvent3);
-            eventService.CancelEvent(finalEvent3.getEventId(), false);
+            eventService.CancelEvent(finalEvent3.getEventId());
 
         });
         removeEvent(event.getEventId());
@@ -445,7 +430,7 @@ public class AppServiceTest {
             removeResponse(response1.getResponseId());
         });
         assertThrows(AlreadyCanceledException.class, () -> {
-            eventService.CancelEvent(event1.getEventId(), false);
+            eventService.CancelEvent(event1.getEventId());
             Response response1 = getValidResponse(event1.getEventId(), true);
             response1 = createResponse(response1);
         });

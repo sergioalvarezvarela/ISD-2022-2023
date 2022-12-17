@@ -17,44 +17,34 @@ public abstract class AbstractSqlResponseDao implements SqlResponseDao {
 
      @Override
      public List<Response> findByEmployee(Connection connection, String email, Boolean asistencia) {
-         String queryString = "";
-         if (asistencia) {
-             queryString = "SELECT responseId, eventId, responseDate, attendance"
-                     + " FROM Response WHERE workerEmail = ? AND attendance = true";
-         } else{
-             queryString = "SELECT responseId, eventId, responseDate, attendance"
-                     + " FROM Response WHERE workerEmail = ? ";
+         String queryString;
+         if(asistencia){
+             queryString="SELECT responseId, eventId, responseDate, attendance "
+             + "FROM Response WHERE workerEmail = ? AND attendance = true";
+         } else {
+             queryString="SELECT responseId, eventId, responseDate, attendance "
+                        + "FROM Response WHERE workerEmail = ?";
          }
 
-         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
-             int j = 1;
-             preparedStatement.setString(j++, email);
+         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)){
+             int i=1;
+             preparedStatement.setString(i++,email);
+             ResultSet resultSet= preparedStatement.executeQuery();
+             List<Response> responses= new ArrayList<>();
+             while (resultSet.next()){
+                 i=1;
+                 Long responseId=resultSet.getLong(i++);
+                 Long eventId= resultSet.getLong(i++);
+                 Timestamp responseDateAsTimestamp = resultSet.getTimestamp(i++);
+                 LocalDateTime responseDate = responseDateAsTimestamp.toLocalDateTime();
+                 boolean attendance  = resultSet.getBoolean(i++);
 
-
-             /* Execute query. */
-             ResultSet resultSet = preparedStatement.executeQuery();
-
-            /* Read movies. */
-             List<Response> responses = new ArrayList<>();
-
-            while (resultSet.next()) {
-                int i = 1;
-                Long responseId = resultSet.getLong(i++);
-                Long eventId = resultSet.getLong(i++);
-                Timestamp responseDateAsTimestamp = resultSet.getTimestamp(i++);
-                LocalDateTime responseDate = responseDateAsTimestamp.toLocalDateTime();
-                boolean attendance  = resultSet.getBoolean(i++);
-
-                responses.add(new Response(responseId,eventId,email,responseDate, attendance));
-
-            }
-
-            /* Return movies. */
+                 responses.add(new Response(responseId,eventId,email,responseDate, attendance));
+             }
              return responses;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+         } catch (SQLException e){
+             throw new RuntimeException(e);
+         }
     }
 
 
@@ -137,4 +127,5 @@ public abstract class AbstractSqlResponseDao implements SqlResponseDao {
             throw new RuntimeException(e);
         }
     }
+
 }

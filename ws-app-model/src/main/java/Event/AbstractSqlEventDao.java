@@ -1,13 +1,8 @@
 package Event;
 
-import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,10 +61,16 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
     @Override
     public List<Event> findEventByDateOrAndKeyWord(Connection connection, LocalDate start, LocalDate finish, String keywords) {
 
+        String queryString = "";
 
-        String queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
-                + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate >= ? AND celebrationDate <= ?  ";
+        if (start ==null){
+             queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
+                    + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate <= ?  ";
 
+        }else{
+             queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
+                    + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate >= ? AND celebrationDate <= ?  ";
+        }
 
         if (keywords != null) {
             queryString += " AND ";
@@ -81,11 +82,11 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
             int i = 1;
 
             /* Fill "preparedStatement". */
-            preparedStatement.setDate(i++, java.sql.Date.valueOf(start));
+            if(start!=null){
+                preparedStatement.setDate(i++, java.sql.Date.valueOf(start));
+            }
             preparedStatement.setDate(i++, java.sql.Date.valueOf(finish));
             preparedStatement.setString(i++, "%" + keywords + "%");
-
-
 
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -119,7 +120,7 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
     }
 
     @Override
-    public void CancelEvent(Connection connection, Long eventId, Boolean status)
+    public void CancelEvent(Connection connection, Long eventId)
             throws InstanceNotFoundException {
 
 
@@ -129,7 +130,7 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
             /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setBoolean(i++, status);
+            preparedStatement.setBoolean(i++, false);
             preparedStatement.setLong(i++, eventId);
 
             /* Execute query. */
@@ -141,67 +142,6 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
             throw new RuntimeException(e);
         }
 
-    }
-
-    @Override
-    public void updateAttendance(Connection connection, Long eventId, Boolean asistencia, int cant)
-            throws InstanceNotFoundException {
-
-        String queryString = " ";
-        if (asistencia) {
-            queryString = "UPDATE Events"
-                    + " SET attendance = ? WHERE EventId = ?";
-        } else {
-            queryString = "UPDATE Events"
-                    + " SET not_attendance = ? WHERE EventId = ?";
-        }
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
-
-            /* Fill "preparedStatement". */
-            int i = 1;
-            preparedStatement.setInt(i++, cant);
-            preparedStatement.setLong(i++, eventId);
-
-            /* Execute query. */
-            int updatedRows = preparedStatement.executeUpdate();
-
-            if (updatedRows == 0) {
-                throw new InstanceNotFoundException(eventId, Event.class.getName());
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    @Override
-    public Boolean isAlreadyCancelled(Connection connection, Long eventId, Boolean status) {
-
-        /* Create "queryString". */
-        String queryString = "SELECT event_name FROM Events WHERE eventId = ? AND event_state = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
-
-            /* Fill "preparedStatement". */
-            int i = 1;
-            preparedStatement.setLong(i++, eventId);
-            preparedStatement.setBoolean(i++, status);
-
-            /* Execute query. */
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (!resultSet.next()) {
-                return false;
-            } else {
-                return true;
-            }
-            /* Return movie. */
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 

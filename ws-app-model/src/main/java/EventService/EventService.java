@@ -13,16 +13,16 @@ import java.util.List;
 
 public interface EventService {
 
-    public Event addEvent(Event event) throws InputValidationException;
+    Event addEvent(Event event) throws InputValidationException;
 
-    public Response addResponse(Response response) throws InputValidationException,InstanceNotFoundException,OutOfTimeException, AlreadyCanceledException, AlreadyResponseException;
-    public void CancelEvent(Long eventId, Boolean status) throws InstanceNotFoundException, OutOfTimeException, AlreadyCanceledException, InputValidationException;
+    Response addResponse(Response response) throws InputValidationException,InstanceNotFoundException,OutOfTimeException, AlreadyCanceledException, AlreadyResponseException;
+    void CancelEvent(Long eventId) throws InstanceNotFoundException, OutOfTimeException, AlreadyCanceledException, InputValidationException;
 
-    public Event findEvent(Long eventId) throws InstanceNotFoundException;
+    Event findEvent(Long eventId) throws InstanceNotFoundException;
 
-    public List<Event> findEventsbyDate(LocalDate dateIn, LocalDate dateEnd, String keywords) throws  InputValidationException;
+    List<Event> findEventsbyDate(LocalDate dateIn, LocalDate dateEnd, String keywords) throws  InputValidationException;
 
 
-    public List<Response> findResponsebyEmail(String email, Boolean Asist) throws InputValidationException;
+    List<Response> findResponsebyEmail(String email, Boolean Asist) throws InputValidationException;
 
 }

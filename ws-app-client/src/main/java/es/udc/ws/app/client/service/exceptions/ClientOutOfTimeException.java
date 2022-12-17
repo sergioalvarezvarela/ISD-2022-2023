@@ -1,8 +1,9 @@
-package EventService.Exception;
+package es.udc.ws.app.client.service.exceptions;
 
-public class OutOfTimeException extends Exception {
+public class ClientOutOfTimeException extends Exception {
     private Long id;
-    public OutOfTimeException(Long id ) {
+
+    public ClientOutOfTimeException(Long id) {
         super("Error, acción fuera de rango de tiempo permitido para: " + id);
         this.id = id;
     }
