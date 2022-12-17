@@ -92,10 +92,16 @@ public class RestClientEventService implements ClientEventService {
     public List<ClientEventDto> findEvents(LocalDate finalDate, String keywords) {
 
         try {
-
-            HttpResponse response = Request.Get(getEndpointAddress() + "event?finalDate="
-                            + URLEncoder.encode(finalDate.toString(), "UTF-8") + "&keywords=" + URLEncoder.encode(keywords, "UTF-8")).
-                    execute().returnResponse();
+            HttpResponse response;
+            if(keywords==null){
+                response = Request.Get(getEndpointAddress() + "event?finalDate="
+                                + URLEncoder.encode(finalDate.toString(), "UTF-8")).
+                        execute().returnResponse();
+            }else{
+                response = Request.Get(getEndpointAddress() + "event?finalDate="
+                                + URLEncoder.encode(finalDate.toString(), "UTF-8") + "&keywords=" + URLEncoder.encode(keywords, "UTF-8")).
+                        execute().returnResponse();
+            }
 
             validateStatusCode(HttpStatus.SC_OK, response);
 

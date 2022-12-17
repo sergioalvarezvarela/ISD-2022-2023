@@ -1,0 +1,43 @@
+1. addEvent: 
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-addEvent 'Fiesta' 'Fiesta Verano' '2023-08-15T17:00' '2023-08-16T00:00'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args= -addEvent 'Presentación' 'Presentación de producto' '2023-09-15T11:00' '2023-09-15T13:00'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args= -addEvent 'Fiesta' 'Fiesta Otoño' '2023-10-15T17:00' '2023-10-16T00:00'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args= -addEvent ' ' 'Cena Otoño' '2023-10-01T21:00' '2023-10-02T00:00'" 
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args= -addEvent 'Cena' ' ' '2023-10-01T21:00' '2023-10-02T00:00'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-addEvent 'Cena' 'Cena Otoño' '2022-08-01T21:00' '2022-08-02T00:00'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-addEvent 'Cena' 'Cena Otoño' '2023-10-01T21:00' '2023-10-01T20:00'"
+
+2. respond:
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 1 'user1@udc.es' true"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 1 'user2@udc.es' false"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 3 'user1@udc.es' false"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 3 'user3@udc.es' false"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 3 'user1@udc.es' true"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 9 'user1@udc.es' true"
+UPDATE Events SET celebrationDate='2022-08-01 21:00' WHERE eventId=2;
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 2 'user4@udc.es' true"
+
+3. cancel:
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-cancel 3"	
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-cancel 3"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-cancel 2"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-cancel 9"
+
+4. Respond cancel
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-respond 3 'user4@udc.es' true"	
+
+5. findEvents
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvents '2023-12-01'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvents '2023-09-01'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvents '2023-12-01' 'Verano'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvents '2023-08-01'"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvents '2022-08-01'"
+
+6. findEvent
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvent 2"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findEvent 9"
+
+7. findResponses
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findResponses 'user1@udc.es' false"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findResponses 'user1@udc.es' true"
+mvn exec:java -Dexec.mainClass=es.udc.ws.app.client.ui.AppServiceClient "-Dexec.args=-findResponses 'user6@udc.es' true"

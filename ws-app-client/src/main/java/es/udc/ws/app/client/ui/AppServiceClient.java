@@ -9,6 +9,7 @@ import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AppServiceClient {
@@ -62,10 +63,14 @@ public class AppServiceClient {
                 ex.printStackTrace(System.err);
             }
         } else if ("-findEvents".equalsIgnoreCase(args[0])) {
-            validateArgs(args, 3, new int[]{});
-
+            List<ClientEventDto> listEvents = new ArrayList<>();
             try {
-                List<ClientEventDto> listEvents = clientEventService.findEvents(LocalDate.parse(args[1]), args[2]);
+                if(args.length==3){
+                    validateArgs(args, 3, new int[]{});
+                    listEvents = clientEventService.findEvents(LocalDate.parse(args[1]), args[2]);
+                }else{
+                    listEvents = clientEventService.findEvents(LocalDate.parse(args[1]), null);
+                }
                 System.out.println("La lista de los eventos anteriores a la fecha =  " + args[1] + " es: " + listEvents);
             } catch (Exception ex) {
                 ex.printStackTrace(System.err);

@@ -30,7 +30,7 @@ public class AppExceptionToJsonConversor {
 
         ObjectNode exceptionObject = JsonNodeFactory.instance.objectNode();
 
-        exceptionObject.put("errorType", "AlreadyResponseException");
+            exceptionObject.put("errorType", "OutOfTimeException");
         exceptionObject.put("Id", (ex.getId() != null) ? ex.getId() : null);
         return exceptionObject;
     }

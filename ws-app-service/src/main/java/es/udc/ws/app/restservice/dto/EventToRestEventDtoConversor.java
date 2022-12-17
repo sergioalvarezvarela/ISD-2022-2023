@@ -13,7 +13,7 @@ public class EventToRestEventDtoConversor {
 
     public static Event toEvent(RestEventDto event) {
         return new Event(event.getEventId(), event.getEventName(),event.getEventDescription(), event.getCelebrationDate(),null,event.getRuntime(),
-                event.geteventState(),event.getAttendance(),event.getTotalAttendance() - event.getAttendance());
+                event.getEventState(),event.getAttendance(),event.getTotalAttendance() - event.getAttendance());
     }
 
     public static List<RestEventDto> toRestEventDtos(List<Event> events) {

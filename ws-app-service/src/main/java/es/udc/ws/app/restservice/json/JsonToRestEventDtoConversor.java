@@ -22,11 +22,23 @@ public class JsonToRestEventDtoConversor {
     public static ObjectNode toObjectNode(RestEventDto event) {
 
         ObjectNode eventObject = JsonNodeFactory.instance.objectNode();
+
+        if (event.getEventId() != null) {
+            eventObject.put("eventId", event.getEventId());
+        }
         eventObject.put("eventName", event.getEventName()).
                 put("celebrationDate", event.getCelebrationDate().toString()).
                 put("runtime", event.getRuntime()).
                 put("description", event.getEventDescription());
-
+        if(event.getEventState()!=null){
+            eventObject.put("eventState", event.getEventState());
+        }
+        if(event.getAttendance()!=null){
+            eventObject.put("attendance", event.getAttendance());
+        }
+        if(event.getTotalAttendance()!=null){
+            eventObject.put("totalAttendance", event.getTotalAttendance());
+        }
 
         return eventObject;
     }
@@ -57,8 +69,14 @@ public class JsonToRestEventDtoConversor {
                 LocalDateTime celebrationDate = LocalDateTime.parse(eventObject.get("celebrationDate").textValue().trim());
                 int runtime =  eventObject.get("runtime").intValue();
                 String description = eventObject.get("description").textValue().trim();
+                JsonNode eventstateNode = eventObject.get("eventState");
+                Boolean state = eventstateNode == null || eventstateNode.booleanValue();
+                JsonNode eventattendanceNode = eventObject.get("attendance");
+                Integer attendance = (eventattendanceNode != null) ? eventattendanceNode.intValue() : 0;
+                JsonNode totalAttendanceNode = eventObject.get("totalAttendance");
+                Integer totalAttendance = (totalAttendanceNode != null) ? totalAttendanceNode.intValue() : 0;
 
-                return new RestEventDto(eventId, eventName,celebrationDate, runtime, description, true,0, 0 );
+                return new RestEventDto(eventId, eventName,celebrationDate, runtime, description, state,attendance, totalAttendance );
             }
         } catch (ParsingException ex) {
             throw ex;

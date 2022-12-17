@@ -11,17 +11,17 @@ public class RestEventDto {
     private int runtime;
     private String eventDescription;
 
-    private boolean eventState;
+    private Boolean eventState;
 
-    private int attendance;
-    private int totalAttendance;
+    private Integer attendance;
+    private Integer totalAttendance;
 
 
     public RestEventDto() {
     }
 
     public RestEventDto(Long eventId, String eventName, LocalDateTime celebrationDate,
-                          int runtime, String eventDescription, boolean eventState, int attendance, int totalAttendance) {
+                          int runtime, String eventDescription, Boolean eventState, Integer attendance, Integer totalAttendance) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.celebrationDate = celebrationDate;
@@ -72,26 +72,27 @@ public class RestEventDto {
         this.eventDescription = eventDescription;
     }
 
-    public boolean geteventState() {
+    public Boolean getEventState() {
         return eventState;
     }
 
-    public void setEventState(boolean eventState) {
+    public void setEventState(Boolean eventState) {
         this.eventState = eventState;
     }
 
-    public int getAttendance() {
+    public Integer getAttendance() {
         return attendance;
     }
 
-    public void setAttendance(int attendance) {
+    public void setAttendance(Integer attendance) {
         this.attendance = attendance;
     }
-    public int getTotalAttendance() {
+
+    public Integer getTotalAttendance() {
         return totalAttendance;
     }
 
-    public void setTotalAttendance(int totalAttendance) {
+    public void setTotalAttendance(Integer totalAttendance) {
         this.totalAttendance = totalAttendance;
     }
 

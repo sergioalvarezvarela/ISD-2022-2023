@@ -92,7 +92,13 @@ public class JsonToClientEventDtoConversor {
             LocalDateTime celebrationDate = LocalDateTime.parse(eventObject.get("celebrationDate").textValue().trim());
             LocalDateTime endDate = celebrationDate.plusHours(eventObject.get("runtime").intValue());
             String description = eventObject.get("description").textValue().trim();
-            return new ClientEventDto(movieId, eventName, description,celebrationDate , endDate, true, 0,0);
+            JsonNode eventstateNode = eventObject.get("eventState");
+            Boolean state = eventstateNode == null || eventstateNode.booleanValue();
+            JsonNode eventattendanceNode = eventObject.get("attendance");
+            Integer attendance = (eventattendanceNode != null) ? eventattendanceNode.intValue() : 0;
+            JsonNode totalAttendanceNode = eventObject.get("totalAttendance");
+            Integer totalAttendance = (totalAttendanceNode != null) ? totalAttendanceNode.intValue() : 0;
+            return new ClientEventDto(movieId, eventName, description,celebrationDate , endDate, state, attendance,totalAttendance);
         }
     }
 

@@ -18,6 +18,10 @@ public class JsonToRestResponseDtoConversor {
     public static ObjectNode toObjectNode(RestResponseDto response) {
 
         ObjectNode responseObject = JsonNodeFactory.instance.objectNode();
+
+        if (response.getResponseId() != null) {
+            responseObject.put("responseId", response.getResponseId());
+        }
         responseObject.put("eventId", response.getEventId()).
                 put("workerEmail", response.getWorkerEmail()).
                 put("attendance", response.getAttendance());
