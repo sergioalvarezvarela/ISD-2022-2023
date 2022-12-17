@@ -22,10 +22,6 @@ public class JsonToRestEventDtoConversor {
     public static ObjectNode toObjectNode(RestEventDto event) {
 
         ObjectNode eventObject = JsonNodeFactory.instance.objectNode();
-
-        if (event.getEventId() != null) {
-            eventObject.put("eventId", event.getEventId());
-        }
         eventObject.put("eventName", event.getEventName()).
                 put("celebrationDate", event.getCelebrationDate().toString()).
                 put("runtime", event.getRuntime()).

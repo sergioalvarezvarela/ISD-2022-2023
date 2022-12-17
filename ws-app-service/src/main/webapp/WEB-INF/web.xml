@@ -21,19 +21,29 @@
         <url-pattern>/event/*</url-pattern>
     </servlet-mapping>
 
-   <!-- Thrift service -->
-   <!-- Fill XXX and uncomment the following lines --> 
-   <!--
     <servlet>
-        <servlet-name>ThriftXXXServiceServlet</servlet-name>
-        <servlet-class>es.udc.ws.app.thriftservice.ThriftXXXServiceServlet</servlet-class>
+        <display-name>ResponseServlet</display-name>
+        <servlet-name>ResponseServlet</servlet-name>
+        <servlet-class>
+            es.udc.ws.app.restservice.servlets.ResponseServlet
+        </servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ThriftXXXServiceServlet</servlet-name>
-        <url-pattern>/thrift/XXXservice</url-pattern>
+        <servlet-name>ResponseServlet</servlet-name>
+        <url-pattern>/response/*</url-pattern>
     </servlet-mapping>
-    -->
+
+   <!-- Thrift service -->
+    <servlet>
+        <servlet-name>ThriftEventServiceServlet</servlet-name>
+        <servlet-class>es.udc.ws.app.thriftservice.ThriftEventServiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ThriftEventServiceServlet</servlet-name>
+        <url-pattern>/thrift/appservice</url-pattern>
+    </servlet-mapping>
 
     <!-- General configuration -->
 

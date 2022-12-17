@@ -26,7 +26,7 @@ public class JsonToClientResponseDtoConversor {
         }
         responseObject.put("eventId", response.getEventId()).
                 put("workerEmail", response.getWorkerEmail()).
-                put("attendance", response.getAttendance());
+                put("attendance", response.isAttendance());
 
         return responseObject;
     }
@@ -82,7 +82,7 @@ public class JsonToClientResponseDtoConversor {
 
             Long eventId = responseObject.get("eventId").longValue();
             String workerEmail = responseObject.get("workerEmail").textValue().trim();
-            int attendance = responseObject.get("attendance").intValue();
+            Boolean attendance = responseObject.get("attendance").booleanValue();
 
             return new ClientResponseDto(responseId, eventId, workerEmail, attendance);
         }

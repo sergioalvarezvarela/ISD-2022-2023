@@ -7,14 +7,14 @@ public class ClientResponseDto {
 
     private String workerEmail;
 
-    private int attendance;
+    private Boolean attendance;
 
 
     public ClientResponseDto() {
     }
 
 
-    public ClientResponseDto(Long responseId, Long eventId, String workerEmail, int attendance) {
+    public ClientResponseDto(Long responseId, Long eventId, String workerEmail, Boolean attendance) {
         this.responseId = responseId;
         this.eventId = eventId;
         this.workerEmail = workerEmail;
@@ -45,18 +45,18 @@ public class ClientResponseDto {
         this.workerEmail = workerEmail;
     }
 
-    public int getAttendance() {
+
+    public Boolean isAttendance() {
         return attendance;
     }
 
-    public void setAttendance(int attendance) {
+    public void setAttendance(Boolean attendance) {
         this.attendance = attendance;
     }
 
-
     @Override
     public String toString() {
-        return "RestResponseDto{" +
+        return "ClientResponseDto{" +
                 "responseId=" + responseId +
                 ", eventId=" + eventId +
                 ", workerEmail='" + workerEmail + '\'' +

@@ -199,7 +199,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findEventsbyDate(LocalDate dateIn, LocalDate dateEnd, String keywords) throws InputValidationException {
-        if  (dateEnd == null){
+        if  ((dateEnd == null) || (dateIn == null)){
             throw new InputValidationException("Las datas no pueden ser nulas");
         }
         if(keywords==null){

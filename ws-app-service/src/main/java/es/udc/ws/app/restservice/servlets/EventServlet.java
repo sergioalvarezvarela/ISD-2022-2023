@@ -1,7 +1,6 @@
 package es.udc.ws.app.restservice.servlets;
 
 import Event.Event;
-import EventService.EventService;
 import EventService.EventServiceFactory;
 import EventService.Exception.AlreadyCanceledException;
 import EventService.Exception.OutOfTimeException;
@@ -18,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,9 +80,10 @@ public class EventServlet extends RestHttpServletTemplate {
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
                     JsonToRestEventDtoConversor.toObjectNode(eventDto), null);
         } else {
+            LocalDate dateNow = LocalDate.now();
             LocalDate finalDate = LocalDate.parse(req.getParameter("finalDate"));
             String keywords = req.getParameter("keywords");
-            List<Event> events = EventServiceFactory.getService().findEventsbyDate(null, finalDate, keywords);
+            List<Event> events = EventServiceFactory.getService().findEventsbyDate(dateNow, finalDate, keywords);
             List<RestEventDto> eventDtos = EventToRestEventDtoConversor.toRestEventDtos(events);
             ServletUtils.writeServiceResponse(resp, HttpServletResponse.SC_OK,
                     JsonToRestEventDtoConversor.toArrayNode(eventDtos), null);
@@ -92,6 +91,5 @@ public class EventServlet extends RestHttpServletTemplate {
 
         }
     }
-
 
 }

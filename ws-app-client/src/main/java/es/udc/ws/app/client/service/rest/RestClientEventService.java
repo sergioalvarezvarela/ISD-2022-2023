@@ -4,10 +4,13 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.udc.ws.app.client.service.ClientEventService;
 import es.udc.ws.app.client.service.dto.ClientEventDto;
+import es.udc.ws.app.client.service.dto.ClientResponseDto;
 import es.udc.ws.app.client.service.exceptions.ClientAlreadyCanceledException;
+import es.udc.ws.app.client.service.exceptions.ClientAlreadyResponseException;
 import es.udc.ws.app.client.service.exceptions.ClientOutOfTimeException;
 import es.udc.ws.app.client.service.rest.json.JsonToClientEventDtoConversor;
 import es.udc.ws.app.client.service.rest.json.JsonToClientExceptionConversor;
+import es.udc.ws.app.client.service.rest.json.JsonToClientResponseDtoConversor;
 import es.udc.ws.util.configuration.ConfigurationParametersManager;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
@@ -35,7 +38,7 @@ public class RestClientEventService implements ClientEventService {
         try {
 
             HttpResponse response = Request.Post(getEndpointAddress() + "event").
-                    bodyStream(toInputStream(event), ContentType.create("application/json")).
+                    bodyStream(toEventInputStream(event), ContentType.create("application/json")).
                     execute().returnResponse();
 
             validateStatusCode(HttpStatus.SC_CREATED, response);
@@ -69,15 +72,16 @@ public class RestClientEventService implements ClientEventService {
     }
 
     @Override
-    public void cancelEvent(Long eventId) throws InstanceNotFoundException, ClientOutOfTimeException, ClientAlreadyCanceledException, InputValidationException  {
+    public void cancelEvent(Long eventId) throws InstanceNotFoundException, ClientOutOfTimeException, ClientAlreadyCanceledException, InputValidationException {
         try {
 
             HttpResponse response = Request.Post(getEndpointAddress() + "event/"
-                            + URLEncoder.encode(eventId+"/cancel" , "UTF-8")).
+                            + URLEncoder.encode(eventId + "/cancel", "UTF-8")).
                     execute().returnResponse();
 
             validateStatusCode(HttpStatus.SC_NO_CONTENT, response);
-        } catch (InputValidationException | InstanceNotFoundException |ClientAlreadyCanceledException | ClientOutOfTimeException e) {
+        } catch (InputValidationException | InstanceNotFoundException | ClientAlreadyCanceledException |
+                 ClientOutOfTimeException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -90,7 +94,7 @@ public class RestClientEventService implements ClientEventService {
         try {
 
             HttpResponse response = Request.Get(getEndpointAddress() + "event?finalDate="
-                            + URLEncoder.encode(finalDate.toString() , "UTF-8") +"&keywords="+ URLEncoder.encode(keywords,"UTF-8")).
+                            + URLEncoder.encode(finalDate.toString(), "UTF-8") + "&keywords=" + URLEncoder.encode(keywords, "UTF-8")).
                     execute().returnResponse();
 
             validateStatusCode(HttpStatus.SC_OK, response);
@@ -104,6 +108,46 @@ public class RestClientEventService implements ClientEventService {
 
     }
 
+    @Override
+    public Long addResponse(ClientResponseDto responseDto) throws InputValidationException, InstanceNotFoundException, ClientOutOfTimeException, ClientAlreadyCanceledException, ClientAlreadyResponseException {
+        try {
+
+            HttpResponse response = Request.Post(getEndpointAddress() + "response").
+                    bodyStream(toResponseInputStream(responseDto), ContentType.create("application/json")).
+                    execute().returnResponse();
+
+            validateStatusCode(HttpStatus.SC_CREATED, response);
+
+            return JsonToClientResponseDtoConversor.toClientResponseDto(response.getEntity().getContent()).getResponseId();
+
+        } catch (InputValidationException | InstanceNotFoundException | ClientAlreadyCanceledException |
+                 ClientOutOfTimeException | ClientAlreadyResponseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<ClientResponseDto> findResponses(String userEmail, boolean asistence) throws InputValidationException {
+
+        try {
+
+            HttpResponse response = Request.Get(getEndpointAddress() + "response?userEmail="
+                            + URLEncoder.encode(userEmail, "UTF-8") + "&asistence=" + URLEncoder.encode(String.valueOf(asistence), "UTF-8")).
+                    execute().returnResponse();
+
+            validateStatusCode(HttpStatus.SC_OK, response);
+
+            return JsonToClientResponseDtoConversor.toClientResponseDtos(response.getEntity()
+                    .getContent());
+        } catch (InputValidationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private synchronized String getEndpointAddress() {
         if (endpointAddress == null) {
             endpointAddress = ConfigurationParametersManager
@@ -112,7 +156,7 @@ public class RestClientEventService implements ClientEventService {
         return endpointAddress;
     }
 
-    private InputStream toInputStream(ClientEventDto event) {
+    private InputStream toEventInputStream(ClientEventDto event) {
 
         try {
 
@@ -130,8 +174,26 @@ public class RestClientEventService implements ClientEventService {
 
     }
 
+    private InputStream toResponseInputStream(ClientResponseDto response) {
 
-    private void validateStatusCode ( int successCode, HttpResponse response) throws Exception {
+        try {
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ObjectMapper objectMapper = ObjectMapperFactory.instance();
+            objectMapper.writer(new DefaultPrettyPrinter()).writeValue(outputStream,
+                    JsonToClientResponseDtoConversor.toObjectNode(response));
+
+            return new ByteArrayInputStream(outputStream.toByteArray());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+    private void validateStatusCode(int successCode, HttpResponse response) throws Exception {
 
         try {
 

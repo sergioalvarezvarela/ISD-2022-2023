@@ -61,16 +61,10 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
     @Override
     public List<Event> findEventByDateOrAndKeyWord(Connection connection, LocalDate start, LocalDate finish, String keywords) {
 
-        String queryString = "";
 
-        if (start ==null){
-             queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
-                    + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate <= ?  ";
+        String queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
+                + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate >= ? AND celebrationDate <= ?  ";
 
-        }else{
-             queryString = "SELECT eventId,event_name, description, celebrationDate, creationDate, "
-                    + " runtime, event_state, attendance, not_attendance FROM Events WHERE celebrationDate >= ? AND celebrationDate <= ?  ";
-        }
 
         if (keywords != null) {
             queryString += " AND ";
@@ -82,9 +76,9 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
             int i = 1;
 
             /* Fill "preparedStatement". */
-            if(start!=null){
-                preparedStatement.setDate(i++, java.sql.Date.valueOf(start));
-            }
+
+            preparedStatement.setDate(i++, java.sql.Date.valueOf(start));
+
             preparedStatement.setDate(i++, java.sql.Date.valueOf(finish));
             preparedStatement.setString(i++, "%" + keywords + "%");
 
