@@ -314,7 +314,7 @@ public class AppServiceTest {
             event2.setCelebrationDate(formatearfecha("22/12/2022 22:44:45"));
             event2 = createEvent(event2);
             eventlist.add(event2);
-            event3.setCelebrationDate(formatearfecha("19/12/2022 20:34:45"));
+            event3.setCelebrationDate(formatearfecha("31/12/2022 20:34:45"));
             event3 = createEvent(event3);
             event4.setCelebrationDate(formatearfecha("27/12/2022 22:44:44"));
             event4= createEvent(event4);

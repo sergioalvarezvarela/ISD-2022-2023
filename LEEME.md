@@ -75,3 +75,18 @@
                 * isAlreadyCancelled
             - Response:
                 * create
+
+## Iteración 2
+---------------------------------------------------------------------
+
+### Resumen de contribución de cada miembro del grupo (consistente con commits en repositorio GIT)
+- miembro1: Sergio Álvarez Varela
+    - DTOS en Cliente y Servicio
+    - Conversores en Cliente y Servicio
+    - Excepciones en Cliente y Servicio
+    - Funcionalidad 1 y 3 en Cliente y Servicio
+    - Factoría en Cliente
+- miembro2: Juan Piñeiro Torres 
+    - Funcionalidad 2 y 6 en Cliente y Servicio
+- miembro3: Graciela Méndez Olmos
+    - Funcionalidad 4 y 5 en Cliente y Servicio

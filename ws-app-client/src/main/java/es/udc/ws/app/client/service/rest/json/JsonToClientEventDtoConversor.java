@@ -33,7 +33,7 @@ public class JsonToClientEventDtoConversor {
                 .put("runtime", ChronoUnit.HOURS.between(event.getCelebrationDate(),event.getEndDate()))
                 .put("description", event.getEventDescription())
                 .put("eventDescription", event.getEventDescription())
-                .put("eventState", event.geteventState())
+                .put("eventState", event.getEventState())
                 .put("attendance", event.getAttendance())
                 .put("totalAttendance", event.getTotalAttendance());
 

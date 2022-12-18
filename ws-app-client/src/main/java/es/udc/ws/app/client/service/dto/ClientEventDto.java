@@ -12,17 +12,17 @@ public class ClientEventDto {
     private LocalDateTime endDate;
 
 
-    private boolean eventState;
+    private Boolean eventState;
 
-    private int attendance;
-    private int totalAttendance;
+    private Integer attendance;
+    private Integer totalAttendance;
 
 
     public ClientEventDto() {
     }
 
     public ClientEventDto(Long eventId, String eventName, String eventDescription, LocalDateTime celebrationDate,
-                          LocalDateTime endDate, boolean eventState, int attendance, int totalAttendance) {
+                          LocalDateTime endDate, Boolean eventState, Integer attendance, Integer totalAttendance) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -75,26 +75,27 @@ public class ClientEventDto {
         this.eventDescription = eventDescription;
     }
 
-    public boolean geteventState() {
+    public Boolean getEventState() {
         return eventState;
     }
 
-    public void seteventState(boolean eventState) {
+    public void setEventState(Boolean eventState) {
         this.eventState = eventState;
     }
 
-    public int getAttendance() {
+    public Integer getAttendance() {
         return attendance;
     }
 
-    public void setAttendance(int attendance) {
+    public void setAttendance(Integer attendance) {
         this.attendance = attendance;
     }
-    public int getTotalAttendance() {
+
+    public Integer getTotalAttendance() {
         return totalAttendance;
     }
 
-    public void setTotalAttendance(int totalAttendance) {
+    public void setTotalAttendance(Integer totalAttendance) {
         this.totalAttendance = totalAttendance;
     }
 
