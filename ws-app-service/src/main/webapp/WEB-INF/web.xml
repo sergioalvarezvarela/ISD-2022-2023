@@ -42,7 +42,7 @@
 
     <servlet-mapping>
         <servlet-name>ThriftEventServiceServlet</servlet-name>
-        <url-pattern>/thrift/appservice</url-pattern>
+        <url-pattern>/thrift/eventservice</url-pattern>
     </servlet-mapping>
 
     <!-- General configuration -->

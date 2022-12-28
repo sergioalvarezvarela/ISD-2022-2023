@@ -1,5 +1,6 @@
 package es.udc.ws.app.thriftservice;
 
+import es.udc.ws.app.thrift.ThriftEventService;
 import es.udc.ws.util.servlet.ThriftHttpServletTemplate;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -12,9 +13,8 @@ public class ThriftEventServiceServlet extends ThriftHttpServletTemplate {
     }
 
     private static TProcessor createProcessor() {
-return null;
-        /*return new ThriftEventService.Processor<ThriftEventService.Iface>(
-                new ThriftEventServiceImpl());*/
+       return new ThriftEventService.Processor<ThriftEventService.Iface>(
+                new ThriftEventServiceImpl());
 
     }
 

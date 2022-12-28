@@ -59,7 +59,7 @@ public class AppServiceTest {
 
 
     private Event getValidEvent(String title) {
-        return new Event(title, "descripcion", 36, formatearfecha("21/12/2022 22:44:45"));
+        return new Event(title, "descripcion", 36, formatearfecha("21/12/2023 22:44:45"));
     }
 
     private Event getValidEvent() {
@@ -311,33 +311,33 @@ public class AppServiceTest {
             List<Event> eventlist = new ArrayList<>();
             event = createEvent(event);
             eventlist.add(event);
-            event2.setCelebrationDate(formatearfecha("22/12/2022 22:44:45"));
+            event2.setCelebrationDate(formatearfecha("22/12/2023 22:44:45"));
             event2 = createEvent(event2);
             eventlist.add(event2);
-            event3.setCelebrationDate(formatearfecha("31/12/2022 20:34:45"));
+            event3.setCelebrationDate(formatearfecha("31/12/2023 20:34:45"));
             event3 = createEvent(event3);
-            event4.setCelebrationDate(formatearfecha("27/12/2022 22:44:44"));
+            event4.setCelebrationDate(formatearfecha("27/12/2023 22:44:44"));
             event4= createEvent(event4);
-            assertEquals(eventlist, eventService.findEventsbyDate(formatearfechaAMD("20/12/2022"), formatearfechaAMD("26/12/2022"), null));
+            assertEquals(eventlist, eventService.findEventsbyDate(formatearfechaAMD("20/12/2023"), formatearfechaAMD("26/12/2023"), null));
 
 
             //Check Keyword
             List<Event> eventlist2 = new ArrayList<>();
-            event5.setCelebrationDate(formatearfecha("23/12/2022 22:44:45"));
+            event5.setCelebrationDate(formatearfecha("23/12/2023 22:44:45"));
             event5.setDescription("La clave para aprobar");
             event5 = createEvent(event5);
             eventlist2.add(event5);
-            event6.setCelebrationDate(formatearfecha("25/12/2022 22:44:45"));
+            event6.setCelebrationDate(formatearfecha("25/12/2023 22:44:45"));
             event6.setDescription("Fiesta CLAVE");
             event6 = createEvent(event6);
             eventlist2.add(event6);
-            assertEquals(eventlist2, eventService.findEventsbyDate(formatearfechaAMD("20/12/2022"), formatearfechaAMD("26/12/2022"), "clave"));
+            assertEquals(eventlist2, eventService.findEventsbyDate(formatearfechaAMD("20/12/2023"), formatearfechaAMD("26/12/2023"), "clave"));
             //Check Keyword not found
             List<Event> eventlist3 = new ArrayList<>();
-            assertEquals(eventlist3, eventService.findEventsbyDate(formatearfechaAMD("20/12/2022"), formatearfechaAMD("26/12/2022"), "NOT FOUND"));
+            assertEquals(eventlist3, eventService.findEventsbyDate(formatearfechaAMD("20/12/2023"), formatearfechaAMD("26/12/2023"), "NOT FOUND"));
             //Check dates not found
             List<Event> eventlist4 = new ArrayList<>();
-            assertEquals(eventlist4, eventService.findEventsbyDate(formatearfechaAMD("20/12/2023"), formatearfechaAMD("26/12/2023"), ""));
+            assertEquals(eventlist4, eventService.findEventsbyDate(formatearfechaAMD("20/12/2022"), formatearfechaAMD("26/12/2022"), ""));
 
 
         } finally {

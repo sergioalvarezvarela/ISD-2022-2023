@@ -1,4 +1,4 @@
-namespace java es.udc.ws.movies.thrift
+namespace java es.udc.ws.app.thrift
 
 struct ThriftEventDto {
     1: i64 eventId
@@ -14,7 +14,7 @@ struct ThriftEventDto {
 struct ThriftResponseDto {
     1: i64 responseId
     2: i64 eventId
-    3: string workerDate
+    3: string workerEmail
     4: bool attendance
 }
 
@@ -28,19 +28,18 @@ exception ThriftInstanceNotFoundException {
 }
 
 exception ThriftAlreadyCanceledException {
-    1: i64 saleId
+    1: i64 eventId
 }
 
 exception ThriftAlreadyResponseException {
-    1: i64 movieId
+    1: i64 eventId
 }
 
 exception ThriftOutOfTimeException {
-    1: i64 movieId
+    1: i64 id
 }
 
-service ThriftMovieService {
-
+service ThriftEventService {
 
    void CancelEvent(1: i64 eventId) throws (1: ThriftInputValidationException e, 2: ThriftInstanceNotFoundException ee, 3: ThriftOutOfTimeException eee, 4: ThriftAlreadyCanceledException eeee)
 
