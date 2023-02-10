@@ -106,13 +106,14 @@ public class EventServiceImpl implements EventService {
                     connection.rollback();
                     throw new OutOfTimeException(eventId);
                 }
-                Boolean isnotcanceled = eventDao.findEventById(connection, eventId).getEventState();
+                Boolean isnotcanceled = evento1.getEventState();
                 if (!isnotcanceled) {
                     connection.rollback();
                     throw new AlreadyCanceledException(eventId);
                 }
                 /* Do work. */
-                eventDao.CancelEvent(connection, eventId);
+                evento1.setEventState(false);
+                eventDao.update(connection,evento1);
 
                 /* Commit. */
                 connection.commit();

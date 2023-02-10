@@ -15,9 +15,6 @@ public interface SqlEventDao {
     void remove(Connection connection, Long eventId)
         throws InstanceNotFoundException;
 
-    void CancelEvent(Connection connection, Long eventId)
-            throws InstanceNotFoundException;
-
     void update(Connection connection, Event event)
             throws InstanceNotFoundException;
 }

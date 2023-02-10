@@ -8,19 +8,6 @@ import java.util.List;
 
 public class ClientResponseDtoToThriftDtoConversor {
 
-    public static ThriftResponseDto toThriftResponseDto(
-            ClientResponseDto clientResponseDto) {
-
-        Long responseId = clientResponseDto.getResponseId();
-
-        return new ThriftResponseDto(
-                responseId == null ? -1 : responseId.longValue(),
-                clientResponseDto.getEventId(),
-                clientResponseDto.getWorkerEmail(),
-                clientResponseDto.isAttendance());
-
-    }
-
     public static List<ClientResponseDto> toClientResponseDtos(List<ThriftResponseDto> responses) {
 
         List<ClientResponseDto> clientResponseDtos = new ArrayList<>(responses.size());

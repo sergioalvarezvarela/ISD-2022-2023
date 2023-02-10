@@ -113,31 +113,6 @@ public abstract class AbstractSqlEventDao implements SqlEventDao {
         }
     }
 
-    @Override
-    public void CancelEvent(Connection connection, Long eventId)
-            throws InstanceNotFoundException {
-
-
-        String queryString = "UPDATE Events SET event_state = ?"
-                + " WHERE eventId = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
-            /* Fill "preparedStatement". */
-            int i = 1;
-            preparedStatement.setBoolean(i++, false);
-            preparedStatement.setLong(i++, eventId);
-
-            /* Execute query. */
-            int canceledRows = preparedStatement.executeUpdate();
-            if (canceledRows == 0) {
-                throw new InstanceNotFoundException(eventId, Event.class.getName());
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
 
     @Override
 
